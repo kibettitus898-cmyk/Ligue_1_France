@@ -1,0 +1,85 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.python-version
+
+.venv/
+venv/
+env/
+ENV/
+
+build/
+dist/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+!.env.example
+secrets.json
+credentials.json
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+*.out
+*.err
+
+
+
+# =========================
+# Local runtime / cache
+# =========================
+.cache/
+tmp/
+temp/
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Frontend / Node / Vercel
+# =========================
+node_modules/
+.next/
+out/
+.vercel/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db

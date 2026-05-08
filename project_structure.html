@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPL Predictor — Project Structure</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=jetbrains-mono@400&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-surface-offset:#f3f0ec;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;--color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-highlight:#cedcd8;--color-success:#437a22;--color-success-highlight:#d4dfcc;--color-orange:#da7101;--color-orange-highlight:#e7d7c4;--color-blue:#006494;--color-blue-highlight:#c6d8e4;--color-gold:#d19900;--color-gold-highlight:#e9e0c6;--color-purple:#7a39bb;--color-purple-highlight:#dacfde;--shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);--radius-md:0.5rem;--radius-lg:0.75rem;--transition:180ms cubic-bezier(.16,1,.3,1)}
+[data-theme="dark"]{--color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-surface-offset:#1d1c1a;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;--color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#313b3b;--color-success:#6daa45;--color-success-highlight:#3a4435;--color-orange:#fdab43;--color-orange-highlight:#564b3e;--color-blue:#5591c7;--color-blue-highlight:#3a4550;--color-gold:#e8af34;--color-gold-highlight:#4d4332;--color-purple:#a86fdf;--color-purple-highlight:#4e4652;--shadow-md:0 4px 12px oklch(0 0 0/.3)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{min-height:100dvh;font-family:'Satoshi',sans-serif;font-size:1rem;color:var(--color-text);background:var(--color-bg);padding:2rem 1rem}
+.page{max-width:900px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;gap:1rem;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:.75rem}
+.logo svg{flex-shrink:0}
+h1{font-size:clamp(1.25rem,2vw,1.75rem);font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.subtitle{font-size:.875rem;color:var(--color-text-muted);margin-top:.25rem}
+.toggle-btn{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:.5rem;cursor:pointer;color:var(--color-text);transition:background var(--transition),border-color var(--transition);flex-shrink:0}
+.toggle-btn:hover{background:var(--color-surface-offset)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.5rem}
+.badge{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .75rem;border-radius:99px;font-size:.75rem;font-weight:500}
+.badge-core{background:var(--color-primary-highlight);color:var(--color-primary)}
+.badge-data{background:var(--color-success-highlight);color:var(--color-success)}
+.badge-api{background:var(--color-blue-highlight);color:var(--color-blue)}
+.badge-ml{background:var(--color-purple-highlight);color:var(--color-purple)}
+.badge-config{background:var(--color-gold-highlight);color:var(--color-gold)}
+.badge-scripts{background:var(--color-orange-highlight);color:var(--color-orange)}
+
+/* Tree */
+.tree-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-md);overflow-x:auto}
+.tree{font-family:'JetBrains Mono',monospace;font-size:.8125rem;line-height:1.9}
+.tree-line{display:flex;align-items:baseline;gap:.5rem;padding:.05rem 0;white-space:nowrap}
+.tree-line:hover .tree-label{color:var(--color-text)}
+.tree-connector{color:var(--color-text-faint);flex-shrink:0}
+.tree-icon{flex-shrink:0;font-size:.875rem}
+.tree-label{color:var(--color-text-muted);transition:color var(--transition);cursor:default}
+.tree-label.dir{color:var(--color-text);font-weight:600}
+.tree-comment{color:var(--color-text-faint);font-style:italic;font-size:.75rem;margin-left:.5rem}
+
+/* Dot colors */
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;margin-bottom:1px}
+.dot-core{background:var(--color-primary)}
+.dot-data{background:var(--color-success)}
+.dot-api{background:var(--color-blue)}
+.dot-ml{background:var(--color-purple)}
+.dot-config{background:var(--color-gold)}
+.dot-scripts{background:var(--color-orange)}
+.dot-test{background:var(--color-text-faint)}
+
+/* Info cards */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.5rem}
+.info-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem}
+.info-card h3{font-size:.875rem;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.info-card p{font-size:.8125rem;color:var(--color-text-muted);line-height:1.6}
+
+/* Quick start */
+.quickstart{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem}
+.quickstart h2{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.cmd-list{display:flex;flex-direction:column;gap:.5rem}
+.cmd{display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md)}
+.cmd-num{font-size:.7rem;font-weight:700;color:var(--color-primary);background:var(--color-primary-highlight);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cmd code{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--color-text)}
+.cmd .cmd-note{font-size:.75rem;color:var(--color-text-faint);margin-left:auto;white-space:nowrap}
+
+@media(max-width:600px){body{padding:1rem .75rem}.tree{font-size:.75rem}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-label="EPL Predictor logo">
+        <rect width="36" height="36" rx="8" fill="var(--color-primary)"/>
+        <circle cx="18" cy="18" r="9" stroke="white" stroke-width="1.5" fill="none"/>
+        <path d="M18 9 L18 18 L24 22" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="18" cy="18" r="1.5" fill="white"/>
+      </svg>
+      <div>
+        <h1>EPL Match Predictor</h1>
+        <div class="subtitle">Production-ready FastAPI backend — folder structure</div>
+      </div>
+    </div>
+    <button class="toggle-btn" data-theme-toggle aria-label="Toggle theme">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+
+  <div class="legend">
+    <span class="badge badge-core">● Core / Config</span>
+    <span class="badge badge-data">● Data / Supabase</span>
+    <span class="badge badge-api">● API Endpoints</span>
+    <span class="badge badge-ml">● ML Pipeline</span>
+    <span class="badge badge-config">● Schemas</span>
+    <span class="badge badge-scripts">● Scripts</span>
+  </div>
+
+  <div class="tree-card">
+    <div class="tree">
+
+<div class="tree-line"><span class="tree-connector"></span><span class="dot dot-config"></span><span class="tree-label dir">epl_predictor/</span><span class="tree-comment"># project root</span></div>
+
+<div class="tree-line"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label">.env</span><span class="tree-comment"># SUPABASE_URL, SUPABASE_KEY</span></div>
+<div class="tree-line"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label">.env.example</span></div>
+<div class="tree-line"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label">requirements.txt</span></div>
+<div class="tree-line"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label">.gitignore</span></div>
+<div class="tree-line"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label">README.md</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-data"></span><span class="tree-label dir">data/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-data"></span><span class="tree-label dir">raw/seasons/</span><span class="tree-comment"># 1011.csv … 2425.csv (15 seasons)</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-data"></span><span class="tree-label dir">processed/</span><span class="tree-comment"># feature-engineered parquet cache</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-data"></span><span class="tree-label dir">splits/</span><span class="tree-comment"># train / val / holdout</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; └──</span><span class="dot dot-data"></span><span class="tree-label">supabase_schema.sql</span><span class="tree-comment"># run once in Supabase SQL editor</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-core"></span><span class="tree-label dir">app/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-core"></span><span class="tree-label">main.py</span><span class="tree-comment"># FastAPI app, CORS, router mounts</span></div>
+
+<div class="tree-line" style="margin-top:.25rem"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-core"></span><span class="tree-label dir">core/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-core"></span><span class="tree-label">config.py</span><span class="tree-comment"># pydantic-settings, reads .env</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-core"></span><span class="tree-label">supabase_client.py</span><span class="tree-comment"># singleton Supabase client</span></div>
+
+<div class="tree-line" style="margin-top:.25rem"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-config"></span><span class="tree-label dir">schemas/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-config"></span><span class="tree-label">match.py</span><span class="tree-comment"># MatchCreate, MatchOut pydantic models</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-config"></span><span class="tree-label">prediction.py</span><span class="tree-comment"># PredictionRequest, PredictionResponse</span></div>
+
+<div class="tree-line" style="margin-top:.25rem"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-data"></span><span class="tree-label dir">services/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-data"></span><span class="tree-label">ingest_service.py</span><span class="tree-comment"># fetch CSVs → clean → upsert Supabase</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-data"></span><span class="tree-label">feature_service.py</span><span class="tree-comment"># rolling features, Elo, matchweek</span></div>
+
+<div class="tree-line" style="margin-top:.25rem"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-ml"></span><span class="tree-label dir">ml/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-ml"></span><span class="tree-label dir">features/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-ml"></span><span class="tree-label">feature_columns.py</span><span class="tree-comment"># FEATURE_COLS single source of truth</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-ml"></span><span class="tree-label dir">models/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-ml"></span><span class="tree-label">random_forest_model.py</span><span class="tree-comment"># train(), load_model(), predict_match()</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-ml"></span><span class="tree-label dir">evaluation/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └──</span><span class="dot dot-ml"></span><span class="tree-label">metrics.py</span><span class="tree-comment"># accuracy, classification report, confusion matrix</span></div>
+
+<div class="tree-line" style="margin-top:.25rem"><span class="tree-connector">│&nbsp;&nbsp; └──</span><span class="dot dot-api"></span><span class="tree-label dir">api/v1/endpoints/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├──</span><span class="dot dot-api"></span><span class="tree-label">matches.py</span><span class="tree-comment"># GET /matches, GET /matches/seasons</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├──</span><span class="dot dot-api"></span><span class="tree-label">predict.py</span><span class="tree-comment"># POST /predict</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; └──</span><span class="dot dot-api"></span><span class="tree-label">pipeline.py</span><span class="tree-comment"># POST /pipeline/ingest, /pipeline/train</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-scripts"></span><span class="tree-label dir">scripts/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-scripts"></span><span class="tree-label">ingest_seasons.py</span><span class="tree-comment"># CLI: load all CSVs → Supabase</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-scripts"></span><span class="tree-label">train_model.py</span><span class="tree-comment"># CLI: train + save RF model</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; └──</span><span class="dot dot-scripts"></span><span class="tree-label">validate_csv.py</span><span class="tree-comment"># CLI: validate local CSVs before upload</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-ml"></span><span class="tree-label dir">models/saved/</span><span class="tree-comment"># rf_epl_model.joblib (git-ignored)</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-test"></span><span class="tree-label dir">tests/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; ├──</span><span class="dot dot-test"></span><span class="tree-label dir">unit/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; ├──</span><span class="dot dot-test"></span><span class="tree-label">test_feature_service.py</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; │&nbsp;&nbsp; └──</span><span class="dot dot-test"></span><span class="tree-label">test_ingest_service.py</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; └──</span><span class="dot dot-test"></span><span class="tree-label dir">integration/</span><span class="tree-comment"># API endpoint integration tests</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">├──</span><span class="dot dot-config"></span><span class="tree-label dir">notebooks/</span></div>
+<div class="tree-line"><span class="tree-connector">│&nbsp;&nbsp; └──</span><span class="dot dot-config"></span><span class="tree-label">01_eda.ipynb</span><span class="tree-comment"># exploratory data analysis</span></div>
+
+<div class="tree-line" style="margin-top:.5rem"><span class="tree-connector">└──</span><span class="dot dot-config"></span><span class="tree-label dir">logs/</span><span class="tree-comment"># runtime logs (git-ignored)</span></div>
+
+    </div>
+  </div>
+
+  <!-- Info cards -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3><span class="dot dot-data" style="width:10px;height:10px"></span> Data Flow</h3>
+      <p>CSV files → <code>ingest_service.py</code> cleans & time-weights → upsert to Supabase <code>match_results</code> table → <code>feature_service.py</code> engineers rolling features + Elo.</p>
+    </div>
+    <div class="info-card">
+      <h3><span class="dot dot-ml" style="width:10px;height:10px"></span> ML Pipeline</h3>
+      <p>Feature columns defined once in <code>feature_columns.py</code>. Training uses <code>TimeSeriesSplit</code> + <code>RandomizedSearchCV</code>. Model saved as <code>rf_epl_model.joblib</code>.</p>
+    </div>
+    <div class="info-card">
+      <h3><span class="dot dot-api" style="width:10px;height:10px"></span> API Endpoints</h3>
+      <p><code>POST /api/v1/predict</code> — real-time prediction.<br><code>POST /api/v1/pipeline/ingest</code> — background ingestion.<br><code>POST /api/v1/pipeline/train</code> — retrain model.</p>
+    </div>
+    <div class="info-card">
+      <h3><span class="dot dot-data" style="width:10px;height:10px"></span> Supabase Table</h3>
+      <p>Run <code>data/supabase_schema.sql</code> once in your Supabase SQL editor. UNIQUE constraint on <code>(season, date, home_team, away_team)</code> prevents duplicates on re-ingest.</p>
+    </div>
+  </div>
+
+  <!-- Quick start -->
+  <div class="quickstart">
+    <h2>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Quick Start
+    </h2>
+    <div class="cmd-list">
+      <div class="cmd"><span class="cmd-num">1</span><code>cp .env.example .env</code><span class="cmd-note">Fill Supabase credentials</span></div>
+      <div class="cmd"><span class="cmd-num">2</span><code>pip install -r requirements.txt</code></div>
+      <div class="cmd"><span class="cmd-num">3</span><code>python scripts/validate_csv.py data/raw/seasons/</code><span class="cmd-note">Check your CSVs</span></div>
+      <div class="cmd"><span class="cmd-num">4</span><code>python scripts/ingest_seasons.py</code><span class="cmd-note">Load all 15 seasons → Supabase</span></div>
+      <div class="cmd"><span class="cmd-num">5</span><code>python scripts/train_model.py</code><span class="cmd-note">Train RF model</span></div>
+      <div class="cmd"><span class="cmd-num">6</span><code>uvicorn app.main:app --reload</code><span class="cmd-note">Start API → localhost:8000/docs</span></div>
+    </div>
+  </div>
+
+</div>
+<script>
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d='dark';r.setAttribute('data-theme',d);
+  t&&t.addEventListener('click',()=>{
+    d=d==='dark'?'light':'dark';
+    r.setAttribute('data-theme',d);
+    t.innerHTML=d==='dark'
+      ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  });
+})();
+</script>
+</body>
+</html>

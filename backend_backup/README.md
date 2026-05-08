@@ -9,4 +9,5 @@ pinned: false
 ---
 
 # Ligue 1 Predictor API
-FastAPI backend for predictions and EV analysis.
+
+FastAPI backend for match predictions and EV analysis.

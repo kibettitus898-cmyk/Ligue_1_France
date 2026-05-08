@@ -50,7 +50,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000"
-        "https://ligue-1-france-b0rjhjtp3-titusks-projects.vercel.app"
+        "https://ligue-1-france.vercel.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
